@@ -5,12 +5,16 @@ description = "AI-assisted spreadsheet"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "assistant-stream>=0.0.24",
+    "asyncpg>=0.30.0",
     "fastapi>=0.115.12",
+    "greenlet>=3.0.0",
     "openai>=1.85.0",
     "pydantic>=2.11.5",
     "pydantic-settings>=2.9.1",
     "python-dotenv>=1.1.0",
     "sentry-sdk[fastapi]>=2.29.1",
+    "sqlalchemy[asyncio]>=2.0.41",
     "tenacity>=9.1.2",
     "uvicorn>=0.34.3",
 ]

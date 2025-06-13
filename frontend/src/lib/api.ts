@@ -1,4 +1,13 @@
 import { CalculateRequest, CalculateResponse } from '@/types/spreadsheet';
+import {
+  ThreadCreateRequest,
+  ThreadUpdateRequest,
+  ThreadCreateUpdateResponse,
+  ThreadListResponse,
+  MessageCreateRequest,
+  MessageCreateUpdateResponse,
+  MessageListResponse,
+} from '@/types/chat';
 
 // Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -49,8 +58,118 @@ export async function calculateFormula(request: CalculateRequest): Promise<Calcu
   }
 }
 
+// Thread API functions
+export async function createThread(request: ThreadCreateRequest): Promise<ThreadCreateUpdateResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/thread`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create thread');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch {
+    throw new ApiError('Failed to create thread. Please try again.');
+  }
+}
+
+export async function updateThread(request: ThreadUpdateRequest): Promise<ThreadCreateUpdateResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/thread`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update thread');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch {
+    throw new ApiError('Failed to update thread. Please try again.');
+  }
+}
+
+export async function listThreads(): Promise<ThreadListResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/threads`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch threads');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch {
+    throw new ApiError('Failed to fetch threads. Please try again.');
+  }
+}
+
+// Message API functions
+export async function createMessage(request: MessageCreateRequest): Promise<MessageCreateUpdateResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create message');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch {
+    throw new ApiError('Failed to create message. Please try again.');
+  }
+}
+
+export async function listMessages(threadId: string): Promise<MessageListResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/messages?thread_id=${encodeURIComponent(threadId)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch messages');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch {
+    throw new ApiError('Failed to fetch messages. Please try again.');
+  }
+}
+
 // Add more API functions here as needed
 export const api = {
   calculateFormula,
+  createThread,
+  updateThread,
+  listThreads,
+  createMessage,
+  listMessages,
   // Future API methods can be added here
 }; 
