@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=aitabbble
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - aitabbble-network
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
@@ -10,6 +24,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - OPENAI_API_KEY=
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/aitabbble
+    depends_on:
+      - postgres
     networks:
       - aitabbble-network
     restart: unless-stopped
@@ -31,4 +48,7 @@ services:
 
 networks:
   aitabbble-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  postgres_data: 
